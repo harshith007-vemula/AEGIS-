@@ -52,8 +52,12 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.status(500).json({ error: err.message || 'Internal Server Error' });
 });
 
-// Start listening
-app.listen(PORT, () => {
-  console.log(`🚀 AEGIS AI Server is running on http://localhost:${PORT}`);
-  db.logs.create('info', `AEGIS backend server successfully initialized on port ${PORT}`, 'app_gateway');
-});
+// Start listening only when not deploying on Vercel
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`🚀 AEGIS AI Server is running on http://localhost:${PORT}`);
+    db.logs.create('info', `AEGIS backend server successfully initialized on port ${PORT}`, 'app_gateway');
+  });
+}
+
+export default app;
